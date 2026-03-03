@@ -7,50 +7,49 @@ const projects = [
   {
     name: "Oracle PSEO",
     description: "Cluster de 9 sites B2B en affiliation",
-    url: "https://quelle-telephonie-pro.fr",
-    duration: "< 2 sem.",
+    date: "15 fév. 2026",
   },
   {
     name: "Indxel",
     description: "Le SEO automatisé pour les devs",
     url: "https://indxel.com",
     logo: "/logos/indxel.png",
-    duration: "2 sem.",
+    date: "7 fév. 2026",
   },
   {
     name: "LMNP Facile",
     description: "Déclarations LMNP en 10 minutes",
     url: "https://lmnp-facile.fr",
     logo: "/logos/lmnp.png",
-    duration: "2 sem.",
+    date: "22 janv. 2026",
   },
   {
     name: "OneMinuteBranding",
     description: "Une identité visuelle complète en 1 minute",
     url: "https://oneminutebranding.com",
     logo: "/logos/omb.png",
-    duration: "2 sem.",
+    date: "21 janv. 2026",
   },
   {
     name: "LeCapybara",
     description: "Lettres et mises en demeure en quelques clics",
     url: "https://lecapybara.fr",
     logo: "/logos/lecapybara.png",
-    duration: "2 sem.",
+    date: "13 janv. 2026",
   },
   {
     name: "Eclo",
     description: "Suivi psy et bien-être au quotidien",
     url: "https://eclo.app",
     logo: "/logos/eclo.png",
-    duration: "3 mois",
+    date: "17 oct. 2025",
   },
   {
     name: "Winterbloom",
     description: "Changer ses habitudes par la gamification",
     url: "https://winterbloom.app",
     logo: "/logos/winterbloom.png",
-    duration: "7 mois",
+    date: "19 mars 2025",
   },
 ];
 
@@ -166,44 +165,67 @@ export default function Home() {
                 <span className="text-sm truncate">En cours de création</span>
               </div>
             </div>
+            <div className="flex items-center gap-3 shrink-0 ml-4">
+              <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
+                1 mars 2026
+              </span>
+            </div>
           </motion.div>
-          {projects.map((project) => (
-            <motion.a
-              key={project.name}
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={fade}
-              className="group flex items-center justify-between py-3 sm:py-3.5 transition-colors hover:text-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div
-                  className="w-5 h-5 shrink-0 overflow-hidden"
-                  style={{
-                    boxShadow: "1px 0 0 0 #141414, -1px 0 0 0 #141414, 0 1px 0 0 #141414, 0 -1px 0 0 #141414",
-                  }}
-                >
-                  {project.logo ? (
-                    <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="w-full h-full flex items-center justify-center bg-foreground text-background text-[7px] font-pixel leading-none">
-                      Or
-                    </span>
+          {projects.map((project) => {
+            const content = (
+              <>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div
+                    className="w-5 h-5 shrink-0 overflow-hidden"
+                    style={{
+                      boxShadow: "1px 0 0 0 #141414, -1px 0 0 0 #141414, 0 1px 0 0 #141414, 0 -1px 0 0 #141414",
+                    }}
+                  >
+                    {project.logo ? (
+                      <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
+                    ) : (
+                      <span className="w-full h-full flex items-center justify-center bg-foreground text-background text-[7px] font-pixel leading-none">
+                        Or
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
+                    <span className="text-sm font-medium whitespace-nowrap">{project.name}</span>
+                    <span className="text-sm text-muted truncate">{project.description}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 ml-4">
+                  <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
+                    {project.date}
+                  </span>
+                  {project.url && (
+                    <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0" />
                   )}
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
-                  <span className="text-sm font-medium whitespace-nowrap">{project.name}</span>
-                  <span className="text-sm text-muted truncate">{project.description}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 shrink-0 ml-4">
-                <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
-                  {project.duration}
-                </span>
-                <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0" />
-              </div>
-            </motion.a>
-          ))}
+              </>
+            );
+
+            return project.url ? (
+              <motion.a
+                key={project.name}
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                variants={fade}
+                className="group flex items-center justify-between py-3 sm:py-3.5 transition-colors hover:text-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
+              >
+                {content}
+              </motion.a>
+            ) : (
+              <motion.div
+                key={project.name}
+                variants={fade}
+                className="flex items-center justify-between py-3 sm:py-3.5"
+              >
+                {content}
+              </motion.div>
+            );
+          })}
         </div>
       </motion.section>
 
