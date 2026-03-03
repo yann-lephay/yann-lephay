@@ -1,44 +1,56 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Twitter, Mail, ArrowUpRight } from "lucide-react";
+import { Github, Twitter, Mail, ArrowUpRight, Loader2 } from "lucide-react";
 
 const projects = [
-  {
-    name: "Indxel",
-    description: "Le SEO automatisé pour les devs",
-    url: "https://indxel.com",
-    logo: "/logos/indxel.png",
-  },
-  {
-    name: "OneMinuteBranding",
-    description: "Une identité visuelle complète en 1 minute",
-    url: "https://oneminutebranding.com",
-    logo: "/logos/omb.png",
-  },
-  {
-    name: "LeCapybara",
-    description: "Lettres et mises en demeure en quelques clics",
-    url: "https://lecapybara.fr",
-    logo: "/logos/lecapybara.png",
-  },
-  {
-    name: "LMNP Facile",
-    description: "Déclarations LMNP en 10 minutes",
-    url: "https://lmnp-facile.fr",
-    logo: "/logos/lmnp.png",
-  },
   {
     name: "Winterbloom",
     description: "Changer ses habitudes par la gamification",
     url: "https://winterbloom.app",
     logo: "/logos/winterbloom.png",
+    duration: "7 mois",
   },
   {
     name: "Eclo",
     description: "Suivi psy et bien-être au quotidien",
     url: "https://eclo.app",
     logo: "/logos/eclo.png",
+    duration: "3 mois",
+  },
+  {
+    name: "LeCapybara",
+    description: "Lettres et mises en demeure en quelques clics",
+    url: "https://lecapybara.fr",
+    logo: "/logos/lecapybara.png",
+    duration: "2 sem.",
+  },
+  {
+    name: "OneMinuteBranding",
+    description: "Une identité visuelle complète en 1 minute",
+    url: "https://oneminutebranding.com",
+    logo: "/logos/omb.png",
+    duration: "2 sem.",
+  },
+  {
+    name: "LMNP Facile",
+    description: "Déclarations LMNP en 10 minutes",
+    url: "https://lmnp-facile.fr",
+    logo: "/logos/lmnp.png",
+    duration: "2 sem.",
+  },
+  {
+    name: "Indxel",
+    description: "Le SEO automatisé pour les devs",
+    url: "https://indxel.com",
+    logo: "/logos/indxel.png",
+    duration: "2 sem.",
+  },
+  {
+    name: "Oracle PSEO",
+    description: "Cluster de 9 sites B2B en affiliation",
+    url: "https://quelle-telephonie-pro.fr",
+    duration: "< 2 sem.",
   },
 ];
 
@@ -111,9 +123,12 @@ export default function Home() {
         variants={{ show: { transition: { staggerChildren: 0.05 } } }}
         className="mb-14 sm:mb-20"
       >
-        <h2 className="text-xs font-pixel uppercase tracking-widest text-muted mb-5">
+        <h2 className="text-xs font-pixel uppercase tracking-widest text-muted mb-1">
           Projets
         </h2>
+        <p className="text-sm text-muted mb-5">
+          7 mois pour le premier. Moins de 2 semaines pour les derniers.
+        </p>
 
         <div className="divide-y divide-border border-y border-border">
           {projects.map((project) => (
@@ -125,23 +140,50 @@ export default function Home() {
               variants={fade}
               className="group flex items-center justify-between py-3 sm:py-3.5 transition-colors hover:text-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
             >
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <div
                   className="w-5 h-5 shrink-0 overflow-hidden"
                   style={{
                     boxShadow: "1px 0 0 0 #141414, -1px 0 0 0 #141414, 0 1px 0 0 #141414, 0 -1px 0 0 #141414",
                   }}
                 >
-                  <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
+                  {project.logo ? (
+                    <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
+                  ) : (
+                    <span className="w-full h-full flex items-center justify-center bg-foreground text-background text-[7px] font-pixel leading-none">
+                      Or
+                    </span>
+                  )}
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
-                  <span className="text-sm font-medium">{project.name}</span>
-                  <span className="text-sm text-muted">{project.description}</span>
+                  <span className="text-sm font-medium whitespace-nowrap">{project.name}</span>
+                  <span className="text-sm text-muted truncate">{project.description}</span>
                 </div>
               </div>
-              <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0 ml-4" />
+              <div className="flex items-center gap-3 shrink-0 ml-4">
+                <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
+                  {project.duration}
+                </span>
+                <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0" />
+              </div>
             </motion.a>
           ))}
+          <motion.div
+            variants={fade}
+            className="flex items-center justify-between py-3 sm:py-3.5 text-muted"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                className="w-5 h-5 shrink-0 flex items-center justify-center"
+              >
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
+                <span className="text-sm font-medium whitespace-nowrap">Nouveau cluster</span>
+                <span className="text-sm truncate">En cours de création</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </motion.section>
 
