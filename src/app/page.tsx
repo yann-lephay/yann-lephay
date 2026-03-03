@@ -175,7 +175,7 @@ export default function Home() {
         </h2>
         {/* Courbe d'accélération */}
         <div className="mt-3 mb-5">
-          <svg viewBox="0 0 300 52" className="w-full" fill="none">
+          <svg viewBox="0 0 300 52" className="w-full overflow-visible" fill="none">
             <motion.path
               d="M 0 48 C 160 47, 240 35, 290 2"
               stroke="currentColor"
@@ -231,6 +231,7 @@ export default function Home() {
               <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
                 1 mars 2026
               </span>
+              <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 opacity-0 shrink-0" />
             </div>
           </motion.div>
           {projects.map((project) => {
@@ -260,9 +261,7 @@ export default function Home() {
                   <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
                     {project.date}
                   </span>
-                  {project.url && (
-                    <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0" />
-                  )}
+                  <ArrowUpRight aria-hidden="true" className={`h-3.5 w-3.5 text-muted shrink-0 ${project.url ? "opacity-0 transition-opacity group-hover:opacity-100" : "opacity-0"}`} />
                 </div>
               </>
             );
