@@ -7,52 +7,99 @@ const projects = [
   {
     name: "Oracle PSEO",
     description: "Cluster de 9 sites B2B en affiliation",
-    url: "https://quelle-telephonie-pro.fr",
-    duration: "< 2 sem.",
+    date: "15 fév. 2026",
+    createdAt: "2026-02-15",
   },
   {
     name: "Indxel",
     description: "Le SEO automatisé pour les devs",
     url: "https://indxel.com",
     logo: "/logos/indxel.png",
-    duration: "2 sem.",
+    date: "7 fév. 2026",
+    createdAt: "2026-02-07",
   },
   {
     name: "LMNP Facile",
     description: "Déclarations LMNP en 10 minutes",
     url: "https://lmnp-facile.fr",
     logo: "/logos/lmnp.png",
-    duration: "2 sem.",
+    date: "22 janv. 2026",
+    createdAt: "2026-01-22",
   },
   {
     name: "OneMinuteBranding",
     description: "Une identité visuelle complète en 1 minute",
     url: "https://oneminutebranding.com",
     logo: "/logos/omb.png",
-    duration: "2 sem.",
+    date: "21 janv. 2026",
+    createdAt: "2026-01-21",
   },
   {
     name: "LeCapybara",
     description: "Lettres et mises en demeure en quelques clics",
     url: "https://lecapybara.fr",
     logo: "/logos/lecapybara.png",
-    duration: "2 sem.",
+    date: "13 janv. 2026",
+    createdAt: "2026-01-13",
   },
   {
     name: "Eclo",
     description: "Suivi psy et bien-être au quotidien",
     url: "https://eclo.app",
     logo: "/logos/eclo.png",
-    duration: "3 mois",
+    date: "17 oct. 2025",
+    createdAt: "2025-10-17",
   },
   {
     name: "Winterbloom",
     description: "Changer ses habitudes par la gamification",
     url: "https://winterbloom.app",
     logo: "/logos/winterbloom.png",
-    duration: "7 mois",
+    date: "19 mars 2025",
+    createdAt: "2025-03-19",
   },
 ];
+
+const NOUVEAU_CLUSTER_DATE = "2026-03-01";
+
+// Bezier curve helpers — curve is M 0 48 C 160 47, 240 35, 290 2
+function getBezierPoint(t: number) {
+  const x = (1 - t) ** 3 * 0 + 3 * (1 - t) ** 2 * t * 160 + 3 * (1 - t) * t ** 2 * 240 + t ** 3 * 290;
+  const y = (1 - t) ** 3 * 48 + 3 * (1 - t) ** 2 * t * 47 + 3 * (1 - t) * t ** 2 * 35 + t ** 3 * 2;
+  return { x, y };
+}
+
+function findTForX(targetX: number) {
+  let low = 0, high = 1;
+  for (let i = 0; i < 50; i++) {
+    const mid = (low + high) / 2;
+    if (getBezierPoint(mid).x < targetX) low = mid;
+    else high = mid;
+  }
+  return (low + high) / 2;
+}
+
+function getPointOnCurve(fraction: number) {
+  if (fraction <= 0) return getBezierPoint(0);
+  if (fraction >= 1) return getBezierPoint(1);
+  const t = findTForX(fraction * 290);
+  return getBezierPoint(t);
+}
+
+// Precompute dot positions sorted chronologically
+const allProjectDates = [
+  ...projects.map((p) => ({ name: p.name, time: new Date(p.createdAt).getTime() })),
+  { name: "Nouveau cluster", time: new Date(NOUVEAU_CLUSTER_DATE).getTime() },
+].sort((a, b) => a.time - b.time);
+
+const minTime = allProjectDates[0].time;
+const maxTime = allProjectDates[allProjectDates.length - 1].time;
+const timeRange = maxTime - minTime;
+
+const curvePoints = allProjectDates.map((p) => {
+  const fraction = timeRange > 0 ? (p.time - minTime) / timeRange : 0;
+  return { ...getPointOnCurve(fraction), name: p.name };
+});
 
 const socials = [
   { name: "GitHub", href: "https://github.com/yann-lephay", icon: Github },
@@ -147,6 +194,20 @@ export default function Home() {
               className="text-foreground"
               opacity="0.04"
             />
+            {curvePoints.map((point, i) => (
+              <motion.circle
+                key={point.name}
+                cx={point.x}
+                cy={point.y}
+                r={2.5}
+                fill="currentColor"
+                className="text-foreground"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 0.7, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: 1.0 + i * 0.1 }}
+              />
+            ))}
           </svg>
         </div>
 
@@ -166,44 +227,67 @@ export default function Home() {
                 <span className="text-sm truncate">En cours de création</span>
               </div>
             </div>
+            <div className="flex items-center gap-3 shrink-0 ml-4">
+              <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
+                1 mars 2026
+              </span>
+            </div>
           </motion.div>
-          {projects.map((project) => (
-            <motion.a
-              key={project.name}
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              variants={fade}
-              className="group flex items-center justify-between py-3 sm:py-3.5 transition-colors hover:text-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div
-                  className="w-5 h-5 shrink-0 overflow-hidden"
-                  style={{
-                    boxShadow: "1px 0 0 0 #141414, -1px 0 0 0 #141414, 0 1px 0 0 #141414, 0 -1px 0 0 #141414",
-                  }}
-                >
-                  {project.logo ? (
-                    <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
-                  ) : (
-                    <span className="w-full h-full flex items-center justify-center bg-foreground text-background text-[7px] font-pixel leading-none">
-                      Or
-                    </span>
+          {projects.map((project) => {
+            const content = (
+              <>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div
+                    className="w-5 h-5 shrink-0 overflow-hidden"
+                    style={{
+                      boxShadow: "1px 0 0 0 #141414, -1px 0 0 0 #141414, 0 1px 0 0 #141414, 0 -1px 0 0 #141414",
+                    }}
+                  >
+                    {project.logo ? (
+                      <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
+                    ) : (
+                      <span className="w-full h-full flex items-center justify-center bg-foreground text-background text-[7px] font-pixel leading-none">
+                        Or
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
+                    <span className="text-sm font-medium whitespace-nowrap">{project.name}</span>
+                    <span className="text-sm text-muted truncate">{project.description}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 ml-4">
+                  <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
+                    {project.date}
+                  </span>
+                  {project.url && (
+                    <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0" />
                   )}
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
-                  <span className="text-sm font-medium whitespace-nowrap">{project.name}</span>
-                  <span className="text-sm text-muted truncate">{project.description}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 shrink-0 ml-4">
-                <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
-                  {project.duration}
-                </span>
-                <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100 shrink-0" />
-              </div>
-            </motion.a>
-          ))}
+              </>
+            );
+
+            return project.url ? (
+              <motion.a
+                key={project.name}
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                variants={fade}
+                className="group flex items-center justify-between py-3 sm:py-3.5 transition-colors hover:text-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground rounded-sm"
+              >
+                {content}
+              </motion.a>
+            ) : (
+              <motion.div
+                key={project.name}
+                variants={fade}
+                className="flex items-center justify-between py-3 sm:py-3.5"
+              >
+                {content}
+              </motion.div>
+            );
+          })}
         </div>
       </motion.section>
 
