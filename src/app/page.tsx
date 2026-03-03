@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Github, Twitter, Mail, ArrowUpRight, Loader2 } from "lucide-react";
 
 const projects = [
   {
     name: "Oracle PSEO",
     description: "Cluster de 9 sites B2B en affiliation",
-    date: "15 fév. 2026",
     createdAt: "2026-02-15",
   },
   {
@@ -15,7 +15,6 @@ const projects = [
     description: "Le SEO automatisé pour les devs",
     url: "https://indxel.com",
     logo: "/logos/indxel.png",
-    date: "7 fév. 2026",
     createdAt: "2026-02-07",
   },
   {
@@ -23,7 +22,6 @@ const projects = [
     description: "Déclarations LMNP en 10 minutes",
     url: "https://lmnp-facile.fr",
     logo: "/logos/lmnp.png",
-    date: "22 janv. 2026",
     createdAt: "2026-01-22",
   },
   {
@@ -31,7 +29,6 @@ const projects = [
     description: "Une identité visuelle complète en 1 minute",
     url: "https://oneminutebranding.com",
     logo: "/logos/omb.png",
-    date: "21 janv. 2026",
     createdAt: "2026-01-21",
   },
   {
@@ -39,7 +36,6 @@ const projects = [
     description: "Lettres et mises en demeure en quelques clics",
     url: "https://lecapybara.fr",
     logo: "/logos/lecapybara.png",
-    date: "13 janv. 2026",
     createdAt: "2026-01-13",
   },
   {
@@ -47,7 +43,6 @@ const projects = [
     description: "Suivi psy et bien-être au quotidien",
     url: "https://eclo.app",
     logo: "/logos/eclo.png",
-    date: "17 oct. 2025",
     createdAt: "2025-10-17",
   },
   {
@@ -55,17 +50,33 @@ const projects = [
     description: "Changer ses habitudes par la gamification",
     url: "https://winterbloom.app",
     logo: "/logos/winterbloom.png",
-    date: "19 mars 2025",
     createdAt: "2025-03-19",
   },
 ];
 
+const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
 const NOUVEAU_CLUSTER_DATE = "2026-03-01";
 
-// Bezier curve helpers — curve is M 0 48 C 160 47, 240 35, 290 2
+// Bezier curve control points (shared between SVG path and dot computation)
+const CURVE = {
+  p0: { x: 0, y: 48 },
+  p1: { x: 160, y: 47 },
+  p2: { x: 240, y: 35 },
+  p3: { x: 290, y: 2 },
+} as const;
+
+const CURVE_PATH = `M ${CURVE.p0.x} ${CURVE.p0.y} C ${CURVE.p1.x} ${CURVE.p1.y}, ${CURVE.p2.x} ${CURVE.p2.y}, ${CURVE.p3.x} ${CURVE.p3.y}`;
+const CURVE_FILL = `${CURVE_PATH} L ${CURVE.p3.x} 52 L ${CURVE.p0.x} 52 Z`;
+
 function getBezierPoint(t: number) {
-  const x = (1 - t) ** 3 * 0 + 3 * (1 - t) ** 2 * t * 160 + 3 * (1 - t) * t ** 2 * 240 + t ** 3 * 290;
-  const y = (1 - t) ** 3 * 48 + 3 * (1 - t) ** 2 * t * 47 + 3 * (1 - t) * t ** 2 * 35 + t ** 3 * 2;
+  const { p0, p1, p2, p3 } = CURVE;
+  const x = (1 - t) ** 3 * p0.x + 3 * (1 - t) ** 2 * t * p1.x + 3 * (1 - t) * t ** 2 * p2.x + t ** 3 * p3.x;
+  const y = (1 - t) ** 3 * p0.y + 3 * (1 - t) ** 2 * t * p1.y + 3 * (1 - t) * t ** 2 * p2.y + t ** 3 * p3.y;
   return { x, y };
 }
 
@@ -82,7 +93,7 @@ function findTForX(targetX: number) {
 function getPointOnCurve(fraction: number) {
   if (fraction <= 0) return getBezierPoint(0);
   if (fraction >= 1) return getBezierPoint(1);
-  const t = findTForX(fraction * 290);
+  const t = findTForX(fraction * CURVE.p3.x);
   return getBezierPoint(t);
 }
 
@@ -122,7 +133,7 @@ export default function Home() {
         transition={{ duration: 0.6 }}
         className="mb-14 sm:mb-20"
       >
-        <img
+        <Image
           src="/Logo.png"
           alt="Y"
           width={32}
@@ -136,14 +147,14 @@ export default function Home() {
             className="w-24 h-24 sm:w-28 sm:h-28 overflow-hidden bg-foreground"
             style={{
               boxShadow: `
-                3px 0 0 0 #141414,
-                -3px 0 0 0 #141414,
-                0 3px 0 0 #141414,
-                0 -3px 0 0 #141414
+                3px 0 0 0 var(--foreground),
+                -3px 0 0 0 var(--foreground),
+                0 3px 0 0 var(--foreground),
+                0 -3px 0 0 var(--foreground)
               `,
             }}
           >
-            <img
+            <Image
               src="/photo.jpg"
               alt="Yann Lephay"
               width={112}
@@ -177,7 +188,7 @@ export default function Home() {
         <div className="mt-3 mb-5">
           <svg viewBox="0 0 300 52" className="w-full overflow-visible" fill="none">
             <motion.path
-              d="M 0 48 C 160 47, 240 35, 290 2"
+              d={CURVE_PATH}
               stroke="currentColor"
               strokeWidth="2"
               className="text-foreground"
@@ -189,7 +200,7 @@ export default function Home() {
               transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
             />
             <path
-              d="M 0 48 C 160 47, 240 35, 290 2 L 290 52 L 0 52 Z"
+              d={CURVE_FILL}
               fill="currentColor"
               className="text-foreground"
               opacity="0.04"
@@ -229,7 +240,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-3 shrink-0 ml-4">
               <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
-                1 mars 2026
+                {dateFormatter.format(new Date(NOUVEAU_CLUSTER_DATE))}
               </span>
               <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 opacity-0 shrink-0" />
             </div>
@@ -241,11 +252,11 @@ export default function Home() {
                   <div
                     className="w-5 h-5 shrink-0 overflow-hidden"
                     style={{
-                      boxShadow: "1px 0 0 0 #141414, -1px 0 0 0 #141414, 0 1px 0 0 #141414, 0 -1px 0 0 #141414",
+                      boxShadow: "1px 0 0 0 var(--foreground), -1px 0 0 0 var(--foreground), 0 1px 0 0 var(--foreground), 0 -1px 0 0 var(--foreground)",
                     }}
                   >
                     {project.logo ? (
-                      <img src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
+                      <Image src={project.logo} alt={project.name} width={20} height={20} className="w-full h-full object-contain" />
                     ) : (
                       <span className="w-full h-full flex items-center justify-center bg-foreground text-background text-[7px] font-pixel leading-none">
                         Or
@@ -259,7 +270,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-3 shrink-0 ml-4">
                   <span className="text-[10px] font-pixel text-muted whitespace-nowrap">
-                    {project.date}
+                    {dateFormatter.format(new Date(project.createdAt))}
                   </span>
                   <ArrowUpRight aria-hidden="true" className={`h-3.5 w-3.5 text-muted shrink-0 ${project.url ? "opacity-0 transition-opacity group-hover:opacity-100" : "opacity-0"}`} />
                 </div>
