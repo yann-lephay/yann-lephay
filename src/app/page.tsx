@@ -5,31 +5,16 @@ import { Github, Twitter, Mail, ArrowUpRight, Loader2 } from "lucide-react";
 
 const projects = [
   {
-    name: "Winterbloom",
-    description: "Changer ses habitudes par la gamification",
-    url: "https://winterbloom.app",
-    logo: "/logos/winterbloom.png",
-    duration: "7 mois",
+    name: "Oracle PSEO",
+    description: "Cluster de 9 sites B2B en affiliation",
+    url: "https://quelle-telephonie-pro.fr",
+    duration: "< 2 sem.",
   },
   {
-    name: "Eclo",
-    description: "Suivi psy et bien-être au quotidien",
-    url: "https://eclo.app",
-    logo: "/logos/eclo.png",
-    duration: "3 mois",
-  },
-  {
-    name: "LeCapybara",
-    description: "Lettres et mises en demeure en quelques clics",
-    url: "https://lecapybara.fr",
-    logo: "/logos/lecapybara.png",
-    duration: "2 sem.",
-  },
-  {
-    name: "OneMinuteBranding",
-    description: "Une identité visuelle complète en 1 minute",
-    url: "https://oneminutebranding.com",
-    logo: "/logos/omb.png",
+    name: "Indxel",
+    description: "Le SEO automatisé pour les devs",
+    url: "https://indxel.com",
+    logo: "/logos/indxel.png",
     duration: "2 sem.",
   },
   {
@@ -40,17 +25,32 @@ const projects = [
     duration: "2 sem.",
   },
   {
-    name: "Indxel",
-    description: "Le SEO automatisé pour les devs",
-    url: "https://indxel.com",
-    logo: "/logos/indxel.png",
+    name: "OneMinuteBranding",
+    description: "Une identité visuelle complète en 1 minute",
+    url: "https://oneminutebranding.com",
+    logo: "/logos/omb.png",
     duration: "2 sem.",
   },
   {
-    name: "Oracle PSEO",
-    description: "Cluster de 9 sites B2B en affiliation",
-    url: "https://quelle-telephonie-pro.fr",
-    duration: "< 2 sem.",
+    name: "LeCapybara",
+    description: "Lettres et mises en demeure en quelques clics",
+    url: "https://lecapybara.fr",
+    logo: "/logos/lecapybara.png",
+    duration: "2 sem.",
+  },
+  {
+    name: "Eclo",
+    description: "Suivi psy et bien-être au quotidien",
+    url: "https://eclo.app",
+    logo: "/logos/eclo.png",
+    duration: "3 mois",
+  },
+  {
+    name: "Winterbloom",
+    description: "Changer ses habitudes par la gamification",
+    url: "https://winterbloom.app",
+    logo: "/logos/winterbloom.png",
+    duration: "7 mois",
   },
 ];
 
@@ -126,11 +126,47 @@ export default function Home() {
         <h2 className="text-xs font-pixel uppercase tracking-widest text-muted mb-1">
           Projets
         </h2>
-        <p className="text-sm text-muted mb-5">
-          7 mois pour le premier. Moins de 2 semaines pour les derniers.
-        </p>
+        {/* Courbe d'accélération */}
+        <div className="mt-3 mb-5">
+          <svg viewBox="0 0 300 52" className="w-full" fill="none">
+            <motion.path
+              d="M 0 48 C 160 47, 240 35, 290 2"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-foreground"
+              opacity="0.5"
+              strokeLinecap="round"
+              initial={{ pathLength: 0 }}
+              whileInView={{ pathLength: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+            />
+            <path
+              d="M 0 48 C 160 47, 240 35, 290 2 L 290 52 L 0 52 Z"
+              fill="currentColor"
+              className="text-foreground"
+              opacity="0.04"
+            />
+          </svg>
+        </div>
 
         <div className="divide-y divide-border border-y border-border">
+          <motion.div
+            variants={fade}
+            className="flex items-center justify-between py-3 sm:py-3.5 text-muted"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                className="w-5 h-5 shrink-0 flex items-center justify-center"
+              >
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
+                <span className="text-sm font-medium whitespace-nowrap">Nouveau cluster</span>
+                <span className="text-sm truncate">En cours de création</span>
+              </div>
+            </div>
+          </motion.div>
           {projects.map((project) => (
             <motion.a
               key={project.name}
@@ -168,22 +204,6 @@ export default function Home() {
               </div>
             </motion.a>
           ))}
-          <motion.div
-            variants={fade}
-            className="flex items-center justify-between py-3 sm:py-3.5 text-muted"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div
-                className="w-5 h-5 shrink-0 flex items-center justify-center"
-              >
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2.5 min-w-0">
-                <span className="text-sm font-medium whitespace-nowrap">Nouveau cluster</span>
-                <span className="text-sm truncate">En cours de création</span>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </motion.section>
 
