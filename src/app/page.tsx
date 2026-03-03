@@ -8,6 +8,7 @@ const projects = [
     name: "Oracle PSEO",
     description: "Cluster de 9 sites B2B en affiliation",
     date: "15 fév. 2026",
+    createdAt: "2026-02-15",
   },
   {
     name: "Indxel",
@@ -15,6 +16,7 @@ const projects = [
     url: "https://indxel.com",
     logo: "/logos/indxel.png",
     date: "7 fév. 2026",
+    createdAt: "2026-02-07",
   },
   {
     name: "LMNP Facile",
@@ -22,6 +24,7 @@ const projects = [
     url: "https://lmnp-facile.fr",
     logo: "/logos/lmnp.png",
     date: "22 janv. 2026",
+    createdAt: "2026-01-22",
   },
   {
     name: "OneMinuteBranding",
@@ -29,6 +32,7 @@ const projects = [
     url: "https://oneminutebranding.com",
     logo: "/logos/omb.png",
     date: "21 janv. 2026",
+    createdAt: "2026-01-21",
   },
   {
     name: "LeCapybara",
@@ -36,6 +40,7 @@ const projects = [
     url: "https://lecapybara.fr",
     logo: "/logos/lecapybara.png",
     date: "13 janv. 2026",
+    createdAt: "2026-01-13",
   },
   {
     name: "Eclo",
@@ -43,6 +48,7 @@ const projects = [
     url: "https://eclo.app",
     logo: "/logos/eclo.png",
     date: "17 oct. 2025",
+    createdAt: "2025-10-17",
   },
   {
     name: "Winterbloom",
@@ -50,8 +56,50 @@ const projects = [
     url: "https://winterbloom.app",
     logo: "/logos/winterbloom.png",
     date: "19 mars 2025",
+    createdAt: "2025-03-19",
   },
 ];
+
+const NOUVEAU_CLUSTER_DATE = "2026-03-01";
+
+// Bezier curve helpers — curve is M 0 48 C 160 47, 240 35, 290 2
+function getBezierPoint(t: number) {
+  const x = (1 - t) ** 3 * 0 + 3 * (1 - t) ** 2 * t * 160 + 3 * (1 - t) * t ** 2 * 240 + t ** 3 * 290;
+  const y = (1 - t) ** 3 * 48 + 3 * (1 - t) ** 2 * t * 47 + 3 * (1 - t) * t ** 2 * 35 + t ** 3 * 2;
+  return { x, y };
+}
+
+function findTForX(targetX: number) {
+  let low = 0, high = 1;
+  for (let i = 0; i < 50; i++) {
+    const mid = (low + high) / 2;
+    if (getBezierPoint(mid).x < targetX) low = mid;
+    else high = mid;
+  }
+  return (low + high) / 2;
+}
+
+function getPointOnCurve(fraction: number) {
+  if (fraction <= 0) return getBezierPoint(0);
+  if (fraction >= 1) return getBezierPoint(1);
+  const t = findTForX(fraction * 290);
+  return getBezierPoint(t);
+}
+
+// Precompute dot positions sorted chronologically
+const allProjectDates = [
+  ...projects.map((p) => ({ name: p.name, time: new Date(p.createdAt).getTime() })),
+  { name: "Nouveau cluster", time: new Date(NOUVEAU_CLUSTER_DATE).getTime() },
+].sort((a, b) => a.time - b.time);
+
+const minTime = allProjectDates[0].time;
+const maxTime = allProjectDates[allProjectDates.length - 1].time;
+const timeRange = maxTime - minTime;
+
+const curvePoints = allProjectDates.map((p) => {
+  const fraction = timeRange > 0 ? (p.time - minTime) / timeRange : 0;
+  return { ...getPointOnCurve(fraction), name: p.name };
+});
 
 const socials = [
   { name: "GitHub", href: "https://github.com/yann-lephay", icon: Github },
@@ -146,6 +194,20 @@ export default function Home() {
               className="text-foreground"
               opacity="0.04"
             />
+            {curvePoints.map((point, i) => (
+              <motion.circle
+                key={point.name}
+                cx={point.x}
+                cy={point.y}
+                r={2.5}
+                fill="currentColor"
+                className="text-foreground"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 0.7, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: 1.0 + i * 0.1 }}
+              />
+            ))}
           </svg>
         </div>
 
