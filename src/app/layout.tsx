@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Yann Lephay — Builder",
-  description: "Solo founder building micro-SaaS products. LeCapybara, LMNP Facile, OneMinuteBranding, Indxel, Winterbloom, Eclo.",
+  description: "Solo founder building micro-SaaS products. Winterbloom, Eclo, LeCapybara, OneMinuteBranding, LMNP Facile, Indxel, Oracle PSEO.",
   metadataBase: new URL("https://yann-lephay.com"),
   openGraph: {
     title: "Yann Lephay — Builder",
