@@ -6,6 +6,11 @@ import { Github, Twitter, Mail, ArrowUpRight, Loader2 } from "lucide-react";
 
 const projects = [
   {
+    name: "Cockpit",
+    description: "Dashboard ops pour monitorer tous les projets",
+    createdAt: "2026-03-01",
+  },
+  {
     name: "Oracle PSEO",
     description: "Cluster de 9 sites B2B en affiliation",
     createdAt: "2026-02-15",
