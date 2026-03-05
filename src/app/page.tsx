@@ -113,7 +113,9 @@ const maxTime = allProjectDates[allProjectDates.length - 1].time;
 const timeRange = maxTime - minTime;
 
 const curvePoints = allProjectDates.map((p) => {
-  const fraction = timeRange > 0 ? (p.time - minTime) / timeRange : 0;
+  const linear = timeRange > 0 ? (p.time - minTime) / timeRange : 0;
+  // Square root scale to spread out early projects and avoid clustering at the end
+  const fraction = Math.sqrt(linear);
   return { ...getPointOnCurve(fraction), name: p.name };
 });
 
