@@ -8,7 +8,7 @@ const projects = [
   {
     name: "Cockpit",
     description: "Dashboard ops pour monitorer tous les projets",
-    createdAt: "2026-03-01",
+    createdAt: "2026-03-05",
   },
   {
     name: "Oracle PSEO",
@@ -65,7 +65,7 @@ const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
   year: "numeric",
 });
 
-const NOUVEAU_CLUSTER_DATE = "2026-03-01";
+const NOUVEAU_CLUSTER_DATE = "2026-03-15";
 
 // Bezier curve control points (shared between SVG path and dot computation)
 const CURVE = {
